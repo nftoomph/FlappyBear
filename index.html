@@ -24,6 +24,9 @@
                 <button onclick="loginWithEmail()">
                     <i class="fas fa-envelope"></i> Email
                 </button>
+                <button id="soundToggle" class="sound-toggle">
+                    <i class="fas fa-volume-up"></i>
+                </button>
             </div>
         </div>
     </header>
@@ -33,28 +36,23 @@
                 <canvas id="gameCanvas"></canvas>
             </div>
         </div>
-        <div class="leaderboard-container">
-            <h2>Leaderboard</h2>
+        <div class="score-display">
+            <div class="current-score">
+                <h3>Current Score</h3>
+                <p id="currentScore">0</p>
+            </div>
+            <div class="high-score">
+                <h3>High Score</h3>
+                <p id="highScore">0</p>
+            </div>
             <div class="leaderboard">
-                <div class="leaderboard-entry">
-                    <span class="rank">1</span>
-                    <span class="player">Player 1</span>
-                    <span class="score">1000</span>
-                </div>
-                <div class="leaderboard-entry">
-                    <span class="rank">2</span>
-                    <span class="player">Player 2</span>
-                    <span class="score">800</span>
-                </div>
-                <div class="leaderboard-entry">
-                    <span class="rank">3</span>
-                    <span class="player">Player 3</span>
-                    <span class="score">600</span>
-                </div>
+                <h3>Top Scores</h3>
+                <ul id="leaderboardList"></ul>
             </div>
         </div>
     </main>
     <script src="game.js"></script>
+    <script src="sounds.js"></script>
     <script src="auth.js"></script>
 </body>
 </html> 

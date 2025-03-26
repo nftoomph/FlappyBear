@@ -12,13 +12,6 @@ birdImage.src = 'images/bird3.png';
 const backgroundImage = new Image();
 backgroundImage.src = 'images/background.jpg';
 
-// Prevent space bar from scrolling the page
-document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-        e.preventDefault();
-    }
-});
-
 // Set canvas size
 canvas.width = 320;
 canvas.height = 480;
@@ -40,14 +33,12 @@ let score = 0;
 let gameStarted = false;
 let gameOver = false;
 let highScore = localStorage.getItem('highScore') || 0;
-let gravity = 0.5;
-let jump = -8;
-let velocity = 0;
-let pipeWidth = 50;
-let pipeGap = 150;
+let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
 
 // Pipe properties
 const birdHeight = 75;  // Half the previous height (was 150)
+const pipeWidth = 80;
+const pipeGap = 150;
 const pipeSpeed = 2;
 const hitboxReduction = 15;  // Reduce hitbox size for more forgiving collisions
 
@@ -72,7 +63,11 @@ document.addEventListener('keydown', (e) => {
         } else if (gameOver) {
             resetGame();
         } else {
-            bear.velocity = jump;
+            // Only play jump sound if the bear is falling
+            if (bear.velocity >= 0) {
+                bear.velocity = bear.jump;
+                playJumpSound();
+            }
         }
     }
 });
@@ -86,7 +81,11 @@ canvas.addEventListener('touchstart', (e) => {
     } else if (gameOver) {
         resetGame();
     } else {
-        bear.velocity = jump;
+        // Only play jump sound if the bear is falling
+        if (bear.velocity >= 0) {
+            bear.velocity = bear.jump;
+            playJumpSound();
+        }
     }
 });
 
@@ -96,6 +95,8 @@ function startGame() {
     createPipe();
     // Start game loop
     gameLoop();
+    // Start background music
+    startBackgroundMusic();
 }
 
 function createPipe() {
@@ -115,16 +116,19 @@ function resetGame() {
     gameOver = false;
     gameStarted = true;
     createPipe();
+    // Start background music
+    startBackgroundMusic();
 }
 
 function update() {
-    // Update bird
+    // Update bear
     bear.velocity += bear.gravity;
     bear.y += bear.velocity;
 
     // Check collisions with ground and ceiling
     if (bear.y + bear.height > canvas.height || bear.y < 0) {
         gameOver = true;
+        stopBackgroundMusic();
     }
 
     // Update pipes
@@ -140,6 +144,7 @@ function update() {
                 pipes[i].x, pipes[i].gapY - birdHeight, pipeWidth, birdHeight
             )) {
                 gameOver = true;
+                stopBackgroundMusic();
             }
             // Check collision with bottom tree
             if (checkCollision(
@@ -147,6 +152,7 @@ function update() {
                 pipes[i].x, pipes[i].gapY + pipeGap, pipeWidth, canvas.height - (pipes[i].gapY + pipeGap)
             )) {
                 gameOver = true;
+                stopBackgroundMusic();
             }
         }
 
@@ -240,3 +246,41 @@ function gameLoop() {
     draw();
     requestAnimationFrame(gameLoop);
 }
+
+function updateLeaderboard() {
+    // Add current score to leaderboard
+    leaderboard.push(score);
+    // Sort in descending order
+    leaderboard.sort((a, b) => b - a);
+    // Keep only top 5 scores
+    leaderboard = leaderboard.slice(0, 5);
+    // Update localStorage
+    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+    // Update high score if needed
+    if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('highScore', highScore);
+    }
+    // Update leaderboard display
+    updateLeaderboardDisplay();
+}
+
+function updateLeaderboardDisplay() {
+    const leaderboardList = document.getElementById('leaderboardList');
+    if (leaderboardList) {
+        leaderboardList.innerHTML = leaderboard
+            .map((score, index) => `<li>${index + 1}. ${score}</li>`)
+            .join('');
+    }
+}
+
+// Update current score display
+function updateScoreDisplay() {
+    const currentScoreElement = document.getElementById('currentScore');
+    const highScoreElement = document.getElementById('highScore');
+    if (currentScoreElement) currentScoreElement.textContent = score;
+    if (highScoreElement) highScoreElement.textContent = highScore;
+}
+
+// Call updateScoreDisplay whenever score changes
+setInterval(updateScoreDisplay, 100);

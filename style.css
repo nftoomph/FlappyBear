@@ -191,32 +191,60 @@ main {
 }
 
 .score-display {
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 2rem;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    min-width: 200px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    width: 100%;
+    max-width: 300px;
 }
 
-.current-score, .high-score {
+.current-score, .high-score, .leaderboard {
+    margin-bottom: 15px;
     text-align: center;
-    margin-bottom: 1.5rem;
 }
 
-.current-score h3, .high-score h3 {
-    color: var(--color-darkest-brown);
-    margin: 0 0 0.5rem 0;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.5rem;
+.current-score h3, .high-score h3, .leaderboard h3 {
+    color: #2c3e50;
+    margin: 0 0 10px 0;
+    font-size: 1.2em;
 }
 
-#score, #highScore {
-    font-size: 3rem;
+.current-score p, .high-score p {
+    font-size: 2em;
     font-weight: bold;
-    color: var(--color-orange);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    color: #e74c3c;
+    margin: 0;
+}
+
+.leaderboard ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.leaderboard li {
+    padding: 8px;
+    margin: 5px 0;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.leaderboard li:first-child {
+    background: #f1c40f;
+    color: #2c3e50;
+}
+
+.leaderboard li:nth-child(2) {
+    background: #bdc3c7;
+}
+
+.leaderboard li:nth-child(3) {
+    background: #d35400;
+    color: white;
 }
 
 .leaderboard-container {
@@ -451,4 +479,22 @@ main {
 
 .login-options button i {
     font-size: 1.2rem;
+}
+
+.sound-toggle {
+    background: none;
+    border: none;
+    color: var(--color-darkest-brown);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: transform 0.2s;
+}
+
+.sound-toggle:hover {
+    transform: scale(1.1);
+}
+
+.sound-toggle.muted i {
+    color: #e74c3c;
 } 
