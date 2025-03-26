@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bear</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="images/flappybear.png" alt="Flappy Bear" class="logo">
+            </div>
+            <div class="login-options">
+                <button class="login-btn google">
+                    <i class="fab fa-google"></i> Login with Google
+                </button>
+                <button class="login-btn wallet">
+                    <i class="fas fa-wallet"></i> Connect Wallet
+                </button>
+                <button class="login-btn email">
+                    <i class="fas fa-envelope"></i> Login with Email
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="game-section">
+            <div class="game-container">
+                <canvas id="gameCanvas"></canvas>
+            </div>
+        </div>
+
+        <div class="leaderboard-container">
+            <h2>Leaderboard</h2>
+            <div class="leaderboard">
+                <div class="leaderboard-entry header">
+                    <span class="rank">Rank</span>
+                    <span class="player">Player</span>
+                    <span class="score">Score</span>
+                </div>
+                <div class="leaderboard-entry">
+                    <span class="rank">1</span>
+                    <span class="player">Bear Master</span>
+                    <span class="score">42</span>
+                </div>
+                <div class="leaderboard-entry">
+                    <span class="rank">2</span>
+                    <span class="player">Forest Runner</span>
+                    <span class="score">38</span>
+                </div>
+                <div class="leaderboard-entry">
+                    <span class="rank">3</span>
+                    <span class="player">Tree Jumper</span>
+                    <span class="score">35</span>
+                </div>
+                <div class="leaderboard-entry">
+                    <span class="rank">4</span>
+                    <span class="player">Sky Dancer</span>
+                    <span class="score">31</span>
+                </div>
+                <div class="leaderboard-entry">
+                    <span class="rank">5</span>
+                    <span class="player">Bird Friend</span>
+                    <span class="score">28</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="game.js"></script>
+</body>
+</html> 
