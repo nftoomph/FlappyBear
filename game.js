@@ -24,7 +24,7 @@ canvas.width = 320;
 canvas.height = 480;
 
 // Game variables
-let bird = {
+let bear = {
     x: 50,
     y: canvas.height / 2,
     velocity: 0,
@@ -39,11 +39,15 @@ let pipes = [];
 let score = 0;
 let gameStarted = false;
 let gameOver = false;
+let highScore = localStorage.getItem('highScore') || 0;
+let gravity = 0.5;
+let jump = -8;
+let velocity = 0;
+let pipeWidth = 50;
+let pipeGap = 150;
 
 // Pipe properties
-const pipeWidth = 80;
 const birdHeight = 75;  // Half the previous height (was 150)
-const pipeGap = 150;
 const pipeSpeed = 2;
 const hitboxReduction = 15;  // Reduce hitbox size for more forgiving collisions
 
@@ -52,10 +56,10 @@ draw();
 
 function checkCollision(bearX, bearY, bearW, bearH, obstacleX, obstacleY, obstacleW, obstacleH) {
     // Add padding to make collision detection more forgiving
-    return bearX + bearW - bird.hitboxOffset > obstacleX + hitboxReduction &&
-           bearX + bird.hitboxOffset < obstacleX + obstacleW - hitboxReduction &&
-           bearY + bearH - bird.hitboxOffset > obstacleY + hitboxReduction &&
-           bearY + bird.hitboxOffset < obstacleY + obstacleH - hitboxReduction;
+    return bearX + bearW - bear.hitboxOffset > obstacleX + hitboxReduction &&
+           bearX + bear.hitboxOffset < obstacleX + obstacleW - hitboxReduction &&
+           bearY + bearH - bear.hitboxOffset > obstacleY + hitboxReduction &&
+           bearY + bear.hitboxOffset < obstacleY + obstacleH - hitboxReduction;
 }
 
 // Event listeners
@@ -68,8 +72,21 @@ document.addEventListener('keydown', (e) => {
         } else if (gameOver) {
             resetGame();
         } else {
-            bird.velocity = bird.jump;
+            bear.velocity = jump;
         }
+    }
+});
+
+// Add touch event support
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // Prevent scrolling when tapping
+    if (!gameStarted) {
+        gameStarted = true;
+        startGame();
+    } else if (gameOver) {
+        resetGame();
+    } else {
+        bear.velocity = jump;
     }
 });
 
@@ -91,8 +108,8 @@ function createPipe() {
 }
 
 function resetGame() {
-    bird.y = canvas.height / 2;
-    bird.velocity = 0;
+    bear.y = canvas.height / 2;
+    bear.velocity = 0;
     pipes = [];
     score = 0;
     gameOver = false;
@@ -102,11 +119,11 @@ function resetGame() {
 
 function update() {
     // Update bird
-    bird.velocity += bird.gravity;
-    bird.y += bird.velocity;
+    bear.velocity += bear.gravity;
+    bear.y += bear.velocity;
 
     // Check collisions with ground and ceiling
-    if (bird.y + bird.height > canvas.height || bird.y < 0) {
+    if (bear.y + bear.height > canvas.height || bear.y < 0) {
         gameOver = true;
     }
 
@@ -115,18 +132,18 @@ function update() {
         pipes[i].x -= pipeSpeed;
 
         // Check collision with pipes
-        if (bird.x + bird.width > pipes[i].x && 
-            bird.x < pipes[i].x + pipeWidth) {
+        if (bear.x + bear.width > pipes[i].x && 
+            bear.x < pipes[i].x + pipeWidth) {
             // Check collision with top bird
             if (checkCollision(
-                bird.x, bird.y, bird.width, bird.height,
+                bear.x, bear.y, bear.width, bear.height,
                 pipes[i].x, pipes[i].gapY - birdHeight, pipeWidth, birdHeight
             )) {
                 gameOver = true;
             }
             // Check collision with bottom tree
             if (checkCollision(
-                bird.x, bird.y, bird.width, bird.height,
+                bear.x, bear.y, bear.width, bear.height,
                 pipes[i].x, pipes[i].gapY + pipeGap, pipeWidth, canvas.height - (pipes[i].gapY + pipeGap)
             )) {
                 gameOver = true;
@@ -134,7 +151,7 @@ function update() {
         }
 
         // Score point when passing pipe
-        if (!pipes[i].passed && pipes[i].x + pipeWidth < bird.x) {
+        if (!pipes[i].passed && pipes[i].x + pipeWidth < bear.x) {
             pipes[i].passed = true;
             score++;
         }
@@ -180,9 +197,9 @@ function draw() {
     
     // Draw bear
     ctx.save();
-    ctx.translate(bird.x + bird.width/2, bird.y + bird.height/2);
-    ctx.rotate(Math.max(Math.min(bird.velocity * 0.05, Math.PI/4), -Math.PI/4));
-    ctx.drawImage(bearImage, -bird.width/2, -bird.height/2, bird.width, bird.height);
+    ctx.translate(bear.x + bear.width/2, bear.y + bear.height/2);
+    ctx.rotate(Math.max(Math.min(bear.velocity * 0.05, Math.PI/4), -Math.PI/4));
+    ctx.drawImage(bearImage, -bear.width/2, -bear.height/2, bear.width, bear.height);
     ctx.restore();
     
     // Draw score
